@@ -61,7 +61,7 @@ class ProjectScreen extends Component {
                             <div>Opened issues: {repo.open_issues}</div>
                             <div>Size: {repo.size}</div>
                             {
-                                !!repo?.topics?.length && <div>Topics: {repo.topics.map(i=><Chip className="chip__project" color={'success'} label={i} size="small"/>)}</div>
+                                !!repo?.topics?.length && <div>Topics: {repo.topics.map(i=><Chip key={i} className="chip__project" color={'success'} label={i} size="small"/>)}</div>
                             }
                         </CardContent>
                     </Card>
