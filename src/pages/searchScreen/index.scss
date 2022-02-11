@@ -1,0 +1,26 @@
+.search-screen{
+    .body{
+        .repo{
+            .head-repo{
+                display: flex;
+                align-items: center;
+                .name-repo{
+                    font-size: 26px;
+                }
+                .visibility {
+                    margin-left: 0.5rem;
+                    font-size: 10px;
+                }
+            }
+            .owner{
+                display: flex;
+                flex-direction: row;
+            }
+        }
+    }
+}
+
+.flex_row{
+    display: flex;
+    flex-direction: row;
+}
