@@ -1,8 +1,22 @@
 .project-screen{
+    margin-top: 30px;
     .readme-col{
         width: 70%;
     }
     .right-col{
         width: 30%;
+        .css-9ly006-MuiButtonBase-root-MuiChip-root .MuiChip-avatarColorPrimary{
+            background-color: unset;
+        }
+        .owner{
+            margin-top: 15px;
+            &__card-header:hover{
+                text-decoration: underline;
+                cursor: pointer;
+            }
+        }
+        .chip__project{
+            margin-right: 5px;
+        }
     }
 }

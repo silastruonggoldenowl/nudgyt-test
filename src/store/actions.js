@@ -13,3 +13,17 @@ export const searchRepo = (data) => {
     data,
   };
 };
+
+export const getRepo = (data) => {
+  return {
+    type: CONTANTS.GET_REPO,
+    data,
+  };
+};
+
+export const getUser = (data) => {
+  return {
+    type: CONTANTS.GET_USER,
+    data,
+  };
+};

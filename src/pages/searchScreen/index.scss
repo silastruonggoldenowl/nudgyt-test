@@ -1,22 +1,58 @@
 .search-screen{
+    margin-bottom: 15px;
+    .header{
+        background-image: url('../../assets/bg-blue.jpeg');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        height: 20vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-bottom: 15px;
+        .branch{
+            font-size: 32px;
+        }
+    }
     .body{
+        width: 70%;
         .repo{
-            .head-repo{
-                display: flex;
-                align-items: center;
-                .name-repo{
-                    font-size: 26px;
+            width: 100%;
+            margin-bottom: 8px;
+            padding: 5px;
+            border-bottom: 1px solid rgba($color: #6d6a6a, $alpha: 0.3);
+            .left-repo{
+                width: 70%;
+                .head-repo{
+                    display: flex;
+                    align-items: center;
+                    .name-repo{
+                        font-size: 26px;
+                    }
+                    .visibility {
+                        margin-left: 0.5rem;
+                        font-size: 10px;
+                    }
                 }
-                .visibility {
-                    margin-left: 0.5rem;
-                    font-size: 10px;
+                .owner{
+                    display: flex;
+                    flex-direction: row;
                 }
             }
-            .owner{
-                display: flex;
-                flex-direction: row;
+            .right-repo{
+                width: 30%;
+                font-size: 30px;
+                text-align: end;
+                .right-repo__item{
+                    margin-left: 5px;
+                }
             }
         }
+    }
+    .pagination{
+        display: flex;
+        justify-content: flex-end;
     }
 }
 

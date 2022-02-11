@@ -8,8 +8,14 @@ import {
     Link,
     Pagination
 } from '@mui/material';
+import moment from 'moment';
 import { connect } from "react-redux";
 import SearchIcon from '@mui/icons-material/Search'
+import StarIcon from '@mui/icons-material/StarOutline'
+import WatcherIcon from '@mui/icons-material/RemoveRedEyeOutlined'
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
+import LoadingScreen from "../loadingScreen/index";
+
 import './index.scss'
 import { searchRepo } from "../../store/actions";
 
@@ -22,7 +28,7 @@ class SearchScreen extends Component {
         }
     }
 
-    componentWillMount = () => {
+    UNSAFE_componentWillMount = () => {
         const params = new URLSearchParams(window.location.search)
         let searchString =params.get('q')
         let page =params.get('page')
@@ -34,40 +40,59 @@ class SearchScreen extends Component {
     }
 
     render(){
-        const { listRepo } = this.props
+        const { listRepo, totalCountRepo, loading } = this.props
         const { searchString, page } = this.state
+        if(loading){
+            return <LoadingScreen/>
+        }
         return <div className='search-screen '>
             <div className="header">
-                <div>Search with Github API</div>
+                <div className="branch">Search with Github API</div>
                 <Paper
-                    component="form"
-                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
+                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: '50%' }}
                 >
-                    <IconButton sx={{ p: '10px' }} aria-label="menu">
+                    <IconButton 
+                        sx={{ p: '10px' }}
+                        onClick={(e) => {
+                            if (searchString) {
+                                window.location =  `/search?q=${searchString}`
+                            }
+                        }}
+                    >
                         <SearchIcon />
                     </IconButton>
                     <InputBase
                         sx={{ ml: 1, flex: 1 }}
-                        placeholder="Search Google Maps"
-                        inputProps={{ 'aria-label': 'search google maps' }}
+                        placeholder="Search Name Repository"
+                        value = {searchString}
+                        onChange={(e) => {
+                            this.setState({
+                                searchString: e.currentTarget.value
+                            })
+                        }}
+                        onKeyPress={(event) => {
+                            if (searchString && event.charCode === 13) {
+                                window.location =  `/search?q=${searchString}`
+                            }
+                        }}
                     />
                 </Paper>
             </div>
-            <div className="body">
+            <div className="body container">
                 {listRepo.map((item, index) =>{
                     return (
-                        <div className="repo flex_row">
+                        <div key={item.id} className="repo flex_row">
                             <div className="left-repo">
                                 <div className="head-repo">
-                                    <Link className="name-repo" href={`/project/${item.full_name}`}>{item.name + '/' + item.owner?.login}</Link>
+                                    <Link className="name-repo" onClick={()=>{this.props.tagetRepoDispatch(item)}} href={`/project/${item.full_name}`}>{item.name + '/' + item.owner?.login}</Link>
                                     <Chip className="visibility ml-3" label={item.visibility} variant="outlined" size="small" />
                                 </div>
                                 <div>{item.description}</div>
                                 <div className="owner">
                                     <span className="label">
-                                        Owner: 
+                                        Owner:
                                     </span>
-                                    <span class="owner">
+                                    <a href={item.owner.html_url} className="owner">
                                         <span>
                                             <Avatar 
                                                 alt={item.owner?.login}
@@ -76,23 +101,35 @@ class SearchScreen extends Component {
                                                 />
                                         </span>
                                         <span>{item.owner?.login}</span>
-                                    </span>
-                                    <div>Language: {item.language}</div>
-                                    <div>Last update: {item.updated_at}</div>
+                                    </a>
                                 </div>
+                                <div>Language: {item.language}</div>
+                                <div>Last update: {moment(item.updated_at).fromNow()}</div>
                             </div>
-                            <div className='right-repo flex_row'>
-                                <div>{item.stargazers_count} | </div>
-                                <div>{item.watchers} | </div>
-                                <div>{item.size}</div>
+                            <div className='right-repo'>
+                                <div>
+                                    <span>{item.stargazers_count}</span>
+                                    <span className="right-repo__item"><StarIcon/></span>
+                                </div>
+                                <div>
+                                    <span>{item.watchers}</span>
+                                    <span className="right-repo__item"><WatcherIcon/></span>
+                                </div>
+                                <div>
+                                    <span>{item.forks_count}</span>
+                                    <span className="right-repo__item"><AccountTreeOutlinedIcon/></span>
+                                </div>
                             </div>
                         </div>
                     )
                 })}
                 <Pagination 
                     defaultPage={page}
-                    count={Math.ceil(1000/20)}
+                    count={totalCountRepo > 1000? 50 : Math.ceil(totalCountRepo/20)}
                     shape="rounded"
+                    hidePrevButton
+                    hideNextButton
+                    className="pagination"
                     onChange ={(e, number)=>{window.location = `/search?q=${searchString}&page=${number}`}}
                 />
 
@@ -104,7 +141,8 @@ class SearchScreen extends Component {
 
 const mapStateToProps = (store) => ({
     listRepo: store.listRepo,
-    totalCountRepo: store.totalCountRepo
+    totalCountRepo: store.totalCountRepo,
+    loading: store.loading
 });
   
 const mapDispatchToProps = (dispatch) => ({
